@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MailCheck | Email Spam Classifier</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/"><span class="brand-mark">M</span> MailCheck</a>
+  <span class="course-tag">CSE (AI & DS) · Mini Project</span>
+</header>
+<main class="wrap">
+  <section class="intro">
+    <p class="eyebrow">EMAIL SAFETY TOOL</p>
+    <h1>Email Spam Classifier</h1>
+    <p class="sub">A simple machine learning project that checks whether an email may be spam.</p>
+  </section>
+
+  <section class="panel">
+    <form method="POST">
+      <label for="email_text">Enter email message</label>
+      <textarea id="email_text" name="email_text" placeholder="Paste the email subject or message here..." required>{{ email_text }}</textarea>
+      <div class="helper"><span>Tip: Paste the complete message for a better prediction.</span><span id="count">0 characters</span></div>
+      <div class="buttons">
+        <button type="submit">Analyse Email <span>→</span></button>
+        <a class="clear" href="/">Clear</a>
+      </div>
+    </form>
+
+    {% if result %}
+    <div class="result {% if result == 'Spam' %}spam{% else %}safe{% endif %}">
+      <div class="result-head">
+        <div>
+          <p class="result-label">PREDICTION</p>
+          <h2>{% if result == 'Spam' %}Possible Spam Email{% else %}Likely Not Spam{% endif %}</h2>
+        </div>
+        <div class="result-symbol">{% if result == 'Spam' %}!{% else %}✓{% endif %}</div>
+      </div>
+      <p class="result-copy">
+        {% if result == 'Spam' %}
+          The model found patterns that are more similar to spam messages in its training examples.
+        {% else %}
+          The model found patterns that are more similar to normal messages in its training examples.
+        {% endif %}
+      </p>
+      <div class="confidence">
+        <div><span>Model confidence</span><strong>{{ confidence }}%</strong></div>
+        <div class="track"><span style="width: {{ confidence }}%"></span></div>
+      </div>
+      <p class="disclaimer">This is a student ML demonstration. Predictions can be wrong; do not use the result alone to decide whether an email is safe.</p>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="about">
+    <h2>About this project</h2>
+    <p>This website uses a Naive Bayes machine learning algorithm. The email text is converted into numerical features using TF-IDF, and the trained model predicts whether the message is spam or not spam.</p>
+    <div class="steps">
+      <div><span>01</span><b>Input</b><small>Paste an email message.</small></div>
+      <div><span>02</span><b>Processing</b><small>TF-IDF converts words into numbers.</small></div>
+      <div><span>03</span><b>Prediction</b><small>Naive Bayes classifies the message.</small></div>
+    </div>
+  </section>
+  <footer>Made as a beginner-level CSE (AI & DS) mini project</footer>
+</main>
+<script>
+const box = document.getElementById("email_text");
+const count = document.getElementById("count");
+function updateCount(){ count.textContent = box.value.length + " characters"; }
+box.addEventListener("input", updateCount);
+updateCount();
+</script>
+</body>
+</html>
